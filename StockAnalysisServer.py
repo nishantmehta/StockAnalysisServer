@@ -4,8 +4,7 @@ from flask import Flask
 import DataStructure
 import DataCollection
 from threading import Thread
-
-
+import  QueryFunctions
 
 
 #initialize data structure to store stock quotes
@@ -19,16 +18,15 @@ dataStruct.structInit(dataStruct)
 dataCollectionObj =DataCollection.DataCollection()
 thread =  Thread(target = dataCollectionObj.producerFunctions, args= [dataStruct])
 thread.start()
-thread.join()
-
-
+#thread.join()
 
 
 app = Flask(__name__)
 
 
 #access the dataStructure like this
-print dataStruct.stockHash
+#print dataStruct.stockHash
+
 
 #functions for thread can be used in similar fashion
 
@@ -38,6 +36,14 @@ print dataStruct.stockHash
 def hello_world():
 
     return 'Hello World!'
+
+@app.route('/query1/')
+def index():
+    consumer=QueryFunctions.queries()
+    consumerThread = Thread(target = consumer.query1,args=[dataStruct])
+    consumerThread.start()
+    consumerThread.join()
+    return 1;
 
 
 if __name__ == '__main__':
