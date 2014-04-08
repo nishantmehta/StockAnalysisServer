@@ -9,13 +9,13 @@ This data can be used to perform analysis by quering the server.
 
 The project supports the following queries:
 
-1. 
+Best performing stock
+---------------------
 
 
-2.
+10 lowest/highest price of a stock
+----------------------------------
 
-
-3.
 
 
 Contributers:
