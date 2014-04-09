@@ -5,6 +5,7 @@ import DataStructure
 import DataCollection
 from threading import Thread
 import  QueryFunctions
+import result
 
 
 #initialize data structure to store stock quotes
@@ -30,6 +31,8 @@ app = Flask(__name__)
 
 #functions for thread can be used in similar fashion
 
+#just trying
+
 
 #our flask structure remains the same
 @app.route('/')
@@ -40,10 +43,11 @@ def hello_world():
 @app.route('/query1/')
 def index():
     consumer=QueryFunctions.queries()
-    consumerThread = Thread(target = consumer.query1,args=[dataStruct])
+    resultData=result.res()
+    consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
     consumerThread.start()
     consumerThread.join()
-    return 1;
+    return resultData.data;
 
 
 if __name__ == '__main__':
