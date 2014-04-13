@@ -7,16 +7,16 @@ __author__ = 'nishantmehta.n'
 
 class queries():
     def query1(self,arg):
-        print "new query request"
+        print("new query request")
         for i in arg.stockHash['goog']:
-            print i
+            print(i)
 
-    def query(self,coName,obj,n,):
+    def query2(self,coName,obj,n,):
         # coName : name of the company
         # obj : obj thread passed
         # n   : TOP n stocks variable
 
-        print "Top n max and min"
+        print("Top n max and min",end='\n')
         #a heapq to hold max 10 values
         maxHeap = []
         # a min queue to hold min 10 values

@@ -43,6 +43,9 @@ def index():
     consumerThread = Thread(target = consumer.query1,args=[dataStruct])
     consumerThread.start()
     consumerThread.join()
+    consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,))
+    consumerThread2.start()
+    consumerThread2.join()
     return 1;
 
 
