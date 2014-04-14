@@ -31,8 +31,6 @@ app = Flask(__name__)
 
 #functions for thread can be used in similar fashion
 
-#just trying
-
 
 #our flask structure remains the same
 @app.route('/')
@@ -48,6 +46,10 @@ def index():
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
+    consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,))
+    consumerThread2.start()
+    consumerThread2.join()
+    return 1;
 
 
 if __name__ == '__main__':
