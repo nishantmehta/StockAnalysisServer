@@ -17,9 +17,9 @@ class queries():
         # n   : TOP n stocks variable
 
         print("Top n max and min",end='\n')
-        #a heapq to hold max 10 values
+        #a min heap queue to hold max 10 values
         maxHeap = []
-        # a min queue to hold min 10 values
+        # a min heap queue to hold min 10 values
         minHeap = []
         # Min Max algorithm
         stockList = obj.stockHash[coName]
