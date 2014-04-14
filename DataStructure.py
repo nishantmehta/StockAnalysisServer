@@ -11,3 +11,4 @@ class DataStructure():
         args.stockHash["goog"]
         args.stockHash["yahoo"]
         args.stockHash["goog"]
+

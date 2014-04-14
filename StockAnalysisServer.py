@@ -5,6 +5,7 @@ import DataStructure
 import DataCollection
 from threading import Thread
 import  QueryFunctions
+import result
 
 
 #initialize data structure to store stock quotes
@@ -40,9 +41,11 @@ def hello_world():
 @app.route('/query1/')
 def index():
     consumer=QueryFunctions.queries()
-    consumerThread = Thread(target = consumer.query1,args=[dataStruct])
+    resultData=result.res()
+    consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
     consumerThread.start()
     consumerThread.join()
+    return resultData.data;
     consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,))
     consumerThread2.start()
     consumerThread2.join()
