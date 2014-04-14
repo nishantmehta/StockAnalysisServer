@@ -1,14 +1,22 @@
+import threading
+
 __author__ = 'nishantmehta.n'
 from collections import defaultdict
-#complete designing of the data structure goes here
+#complete designing of the data structure goes here,the lock is passed to the ds in the contructor so later on its used via object i.e args
 
 
-class DataStructure():
-    stockHash=defaultdict(list)
+class DataStructure(threading.Thread):
+
+    def __init__(self,lock,thelist):
+        self.stockHash=thelist
+        self.lock = lock
 
     def structInit(self,args):
         #add companies here
         args.stockHash["goog"]
-        args.stockHash["yahoo"]
-        args.stockHash["goog"]
+        args.stockHash["Yahoo"]
+        args.stockHash["Apple"]
 
+
+def lock():
+    return None

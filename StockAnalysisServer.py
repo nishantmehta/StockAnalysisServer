@@ -1,15 +1,20 @@
 #this will be our main controller, it will start all process and handle user request
+from collections import defaultdict
+import threading
 
 from flask import Flask
+from threading import Thread
 import DataStructure
 import DataCollection
-from threading import Thread
-import  QueryFunctions
+import threading
+
+import QueryFunctions
 import result
 
-
+lock=threading.Lock()
+alist=defaultdict(list)
 #initialize data structure to store stock quotes
-dataStruct = DataStructure.DataStructure()
+dataStruct = DataStructure.DataStructure(lock,alist)
 
 #initialize the data structure
 dataStruct.structInit(dataStruct)
@@ -17,6 +22,8 @@ dataStruct.structInit(dataStruct)
 
 #initializa the thread to collect data from yahoo api
 dataCollectionObj =DataCollection.DataCollection()
+
+
 thread =  Thread(target = dataCollectionObj.producerFunctions, args= [dataStruct])
 thread.start()
 #thread.join()

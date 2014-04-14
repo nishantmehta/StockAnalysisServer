@@ -15,7 +15,7 @@ class queries():
         # obj : obj thread passed
         # n   : TOP n stocks variable
 
-        print("Top n max and min",end='\n')
+        print "Top n max and min"+'\n'
         #a min heap queue to hold max 10 values
         maxHeap = []
         # a min heap queue to hold min 10 values
@@ -36,10 +36,10 @@ class queries():
 
         #print the max 10 values
         for i in maxHeap:
-            print(maxHeap[i],end='\n')
+            print maxHeap[i]+'\n'
         #print the min 10 values
         for i in minHeap:
-            print(minHeap[i],end='\n')
+            print minHeap[i] + '\n'
 
 
 
