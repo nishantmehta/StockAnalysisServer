@@ -1,9 +1,35 @@
 import heapq
-import result
-import node1
+from collections import defaultdict
 __author__ = 'nishantmehta.n'
 
+'''
+try:
+    from line_profiler import LineProfiler
 
+    def do_profile(follow=[]):
+        def inner(func):
+            def profiled_func(*args, **kwargs):
+                try:
+                    profiler = LineProfiler()
+                    profiler.add_function(func)
+                    for f in follow:
+                        profiler.add_function(f)
+                    profiler.enable_by_count()
+                    return func(*args, **kwargs)
+                finally:
+                    profiler.print_stats()
+            return profiled_func
+        return inner
+
+except ImportError:
+    def do_profile(follow=[]):
+        "Helpful if you accidentally leave in production!"
+        def inner(func):
+            def nothing(*args, **kwargs):
+                return func(*args, **kwargs)
+            return nothing
+        return inner
+'''
 #all the query functions will be written here
 
 class queries():
@@ -12,25 +38,26 @@ class queries():
         for i in arg.stockHash['goog']:
             print(i)
 
-    def query2(self,coName,obj,n,result):
+    def query2(self,coName,dataStructure,n,result):
         # coName : name of the company
         # obj : obj thread passed
         # n   : TOP n stocks variable
 
-
+        print "Top n max and min"+'\n'
         #a min heap queue to hold max 10 values
         maxHeap = []
-        #a min heap queue to hold min 10 values
+        # a min heap queue to hold min 10 values
         minHeap = []
         # Min Max algorithm
-        obj.lock.acquire(shared=True)
-        try:
-            stockList = obj.stockHash[coName]
 
-            # test --print "size of array in goog is " + str(len(stockList)) + '\n'
+        #--acquire the lock in shared mode so that
+        #--concurrent threads can acquire it simultaneously
+
+        dataStructure.lock.acquire(shared = True )
+        try:
+            stockList = dataStructure.stockHash[coName]
             j = 0
             for i in stockList:
-
                 if len(maxHeap) < n :
                   heapq.heappush(maxHeap,i.price)
 
@@ -44,19 +71,47 @@ class queries():
                     if minHeap[0] < (-1 * i):
                         # print "heap min " + minHeap[0] + " " + i.price
                         heapq.heapreplace(minHeap,(-1)*i.price)
-            # print "Max heap price is " + maxHeap[0]
-            result.data = ''
-            #print the max 10 values
-            result.data = 'Max Values' + '<br>'
-            for j in maxHeap:
-                result.data += str(j) + '<br>'
-                print j + '\n'
-            #print the min 10 values
-            #result.data = 'Min Values' + '\n'
-            # for k in minHeap:
-            #     result.data += k +'\t'
         finally:
-           obj.lock.release()
+            dataStructure.lock.release()
+
+        # End of read , return the result back to calling function
+
+        result.data = ''
+        #print the max 10 values
+        result.data = 'Max Values' + '<br>'
+        for i in maxHeap:
+            result.data += maxHeap[i]+'\t'
+        #print the min 10 values
+        result.data = 'Min Values' + '<br>'
+        for i in minHeap:
+            result.data += minHeap[i]+'\t'
+
+    #@do_profile(follow=[])
+    def query3(self, dataStructure,result):
+        result.data=""
+        dataStructure.lock.acquire(shared = True )
+        try:
+            for company in dataStructure.stockHash.iterkeys():
+                #print company
+                arrayOfDiff=[]
+                sizeOfStruct=len(dataStructure.stockHash[company])
+                #print sizeOfStruct
+                for i in range (0,sizeOfStruct-1):
+                    arrayOfDiff.append(float(dataStructure.stockHash[company][i+1].price)- float(dataStructure.stockHash[company][i].price))
+
+                maxDiff=arrayOfDiff[0]
+                #print arrayOfDiff
+
+                for j in range (1,sizeOfStruct-1):
+                    if (arrayOfDiff[j-1]>0):
+                        arrayOfDiff[j]+=arrayOfDiff[j-1]
+                    if(maxDiff<arrayOfDiff[j]):
+                        maxDiff=arrayOfDiff[j]
+        finally:
+            dataStructure.lock.release( )
+
+        result.data += "max profit for " + company + " could have been " + str(maxDiff) + "<br>"
+
 
 
 

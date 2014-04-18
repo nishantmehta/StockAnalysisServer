@@ -10,11 +10,16 @@ import threading
 
 import QueryFunctions
 import result
+
 import threading2
 from threading2 import *
 
-#changing to Shared Lock
-lock = SHLock()
+
+# created a lock that can be shared using Shared variable associated with it
+# if lock.share = true  --- multiple locks can shared the lock
+# if lock.share = false --- the lock becomes an exclusive lock
+
+lock  = SHLock()
 alist = defaultdict(list)
 #initialize data structure to store stock quotes
 dataStruct = DataStructure.DataStructure(lock,alist)
@@ -46,25 +51,26 @@ app = Flask(__name__)
 @app.route('/')
 def hello_world():
 
-    # return 'Hello World!'
-    return len(dataStruct.stockHash)
+    return 'Hello World!'
 
-
-@app.route('/query2/')
+@app.route('/query1/')
 def index():
     consumer=QueryFunctions.queries()
-    # resultData=result.res()
-    # consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
-    # consumerThread.start()
-    # consumerThread.join()
-    #return resultData.data;
+    resultData=result.res()
+    consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
+    consumerThread.start()
+    consumerThread.join()
+    return resultData.data;
 
-    resultData1=result.res()
-    consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,resultData1,))
-    consumerThread2.start()
-    consumerThread2.join()
-    # print "result of query is " + resultData1.data;
-    return "result of query is " + resultData1.data;
+@app.route('/BestDealsForStock/')
+def bestProfit():
+    consumer=QueryFunctions.queries()
+    resultData=result.res()
+    consumerThread = Thread(target = consumer.query3,args=[dataStruct,resultData])
+    consumerThread.start()
+    consumerThread.join()
+    return resultData.data;
+
 
 
 if __name__ == '__main__':

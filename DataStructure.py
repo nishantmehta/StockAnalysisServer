@@ -14,7 +14,7 @@ class DataStructure(threading.Thread):
 
     def structInit(self,args):
         #add companies here
-        args.stockHash["goog"]
+        args.stockHash["Google"]
         args.stockHash["Yahoo"]
         args.stockHash["Apple"]
 
