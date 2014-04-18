@@ -14,55 +14,44 @@ import time
 class DataCollection():
 
 
-    def producerFunctions(self,args ):
+    def producerFunctions(self,dataStructure ):
         # we need to the frequency of server ping for each stock
         # possible changes in the looping structure
         # All data needs to be stored in the arg.stockHash[<company code>]
-        count = 3
-        for i in range(10000000):
-            if(i%3==0):
-                if count==3:
-                    urldata = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
-                    weburl = urllib2.urlopen(urldata)
-                    data = weburl.read()
-                    da=json.loads(data)
-                    ts=time.time()
-                    obj1=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') ,str(da['query']['results']['quote']['LastTradePriceOnly']))
-                    args.lock.acquire() 
-                    try:
-                        args.stockHash['goog'].append(obj1)
-                        count=count-1
-                    finally:
-                        args.lock.release()
+        googleURL='http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
+        yahooURL='https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22YHOO%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
+        appleURL='https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22AAPL%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
 
-                elif count==2:
-                    urldata = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22YHOO%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
-                    weburl = urllib2.urlopen(urldata)
-                    data = weburl.read()
-                    da=json.loads(data)
-                    ts=time.time()
-                    obj2=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'),str(da['query']['results']['quote']['LastTradePriceOnly']))
-                    args.lock.acquire()
-                    try:
-                        args.stockHash['Yahoo'].append(obj2)
-                        count=count-1
-                    finally:
-                        args.lock.release()
+        while (True):
+            ts=time.time()
 
-                elif count==1:
-                    urldata = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22AAPL%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
-                    weburl = urllib2.urlopen(urldata)
-                    data = weburl.read()
-                    da=json.loads(data)
-                    ts=time.time()
-                    obj3=node1.node1(datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'),str(da['query']['results']['quote']['LastTradePriceOnly']))
-                    args.lock.acquire()
-                    try:
-                        args.stockHash['Apple'].append(obj3)
-                        count=3
-                    finally:
-                        args.lock.release()
+            #google quote ping
+            weburl = urllib2.urlopen(googleURL)
+            data = weburl.read()
+            da=json.loads(data)
+            google=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') ,str(da['query']['results']['quote']['LastTradePriceOnly']))
 
+            #yahoo quote ping
+            weburl = urllib2.urlopen(yahooURL)
+            data = weburl.read()
+            da=json.loads(data)
+            yahoo=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') ,str(da['query']['results']['quote']['LastTradePriceOnly']))
 
+            #google quote ping
+            weburl = urllib2.urlopen(appleURL)
+            data = weburl.read()
+            da=json.loads(data)
+            apple=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') ,str(da['query']['results']['quote']['LastTradePriceOnly']))
 
+            #acquire locks
+            dataStructure.stockHash["Google"].append(google)
+            dataStructure.stockHash["Apple"].append(apple)
+            dataStructure.stockHash["Yahoo"].append(yahoo)
+            #revoke lock
+
+            #wait until refresh time expires
+            time.sleep(3)
+
+            for company in dataStructure.stockHash:
+                print "company has # of values "+ company +" "+ str(len(dataStructure.stockHash[company]))
 
