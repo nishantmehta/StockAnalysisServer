@@ -2,7 +2,7 @@ import heapq
 from collections import defaultdict
 __author__ = 'nishantmehta.n'
 
-
+'''
 try:
     from line_profiler import LineProfiler
 
@@ -29,7 +29,7 @@ except ImportError:
                 return func(*args, **kwargs)
             return nothing
         return inner
-
+'''
 #all the query functions will be written here
 
 class queries():
@@ -71,7 +71,7 @@ class queries():
         for i in minHeap:
             resultset.data += minHeap[i]+'\t'
 
-    @do_profile(follow=[])
+    #@do_profile(follow=[])
     def query3(self, dataStructure,result):
         result.data=""
         for company in dataStructure.stockHash.iterkeys():
