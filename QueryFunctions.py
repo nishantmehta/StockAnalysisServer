@@ -112,6 +112,28 @@ class queries():
 
         result.data += "max profit for " + company + " could have been " + str(maxDiff) + "<br>"
 
+    #@do_profile(follow=[])
+    def query3(self, dataStructure,result):
+        result.data=""
+        for company in dataStructure.stockHash.iterkeys():
+            #print company
+            arrayOfDiff=[]
+            sizeOfStruct=len(dataStructure.stockHash[company])
+            #print sizeOfStruct
+            for i in range (0,sizeOfStruct-1):
+                arrayOfDiff.append(float(dataStructure.stockHash[company][i+1].price)- float(dataStructure.stockHash[company][i].price))
+
+            maxDiff=arrayOfDiff[0]
+            #print arrayOfDiff
+
+            for j in range (1,sizeOfStruct-1):
+                if (arrayOfDiff[j-1]>0):
+                    arrayOfDiff[j]+=arrayOfDiff[j-1]
+                if(maxDiff<arrayOfDiff[j]):
+                    maxDiff=arrayOfDiff[j]
+
+            result.data += "max profit for " + company + " could have been " + str(maxDiff) + "<br>"
+
 
 
 
