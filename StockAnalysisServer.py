@@ -53,10 +53,11 @@ def index():
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
-    consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,))
+    resultData1=result.res()
+    consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,resultData1,))
     consumerThread2.start()
     consumerThread2.join()
-    return 1;
+    print resultData1.data;
 
 
 if __name__ == '__main__':
