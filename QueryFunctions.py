@@ -38,7 +38,8 @@ class queries():
         for i in maxHeap:
             print maxHeap[i]+'\n'
         #print the min 10 values
-        for i in minHeap:
+        for i in \
+                minHeap:
             print minHeap[i] + '\n'
 
 
