@@ -59,7 +59,8 @@ class DataCollection():
 
             #wait until refresh time expires
             time.sleep(3)
-
+            '''
             for company in dataStructure.stockHash:
                 print "company has # of values "+ company +" "+ str(len(dataStructure.stockHash[company]))
 
+            '''

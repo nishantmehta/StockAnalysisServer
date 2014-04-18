@@ -57,7 +57,7 @@ def hello_world():
 def index():
     consumer=QueryFunctions.queries()
     resultData=result.res()
-    consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
+    consumerThread = Thread(target = consumer.query2,args=['Google',dataStruct,10,resultData])
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
