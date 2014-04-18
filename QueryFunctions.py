@@ -10,7 +10,7 @@ class queries():
         for i in arg.stockHash['goog']:
             print(i)
 
-    def query2(self,coName,obj,n,):
+    def query2(self,coName,obj,n,resultset):
         # coName : name of the company
         # obj : obj thread passed
         # n   : TOP n stocks variable
@@ -33,13 +33,15 @@ class queries():
                     heapq.heapreplace(maxHeap,stockList[i].price)
                 if minHeap[0] < (-1 * stockList[i]):
                     heapq.heapreplace(minHeap,(-1)*stockList[i].price)
-
+        resultset.data = ''
         #print the max 10 values
+        resultset.data = 'Max Values' + '\n'
         for i in maxHeap:
-            print maxHeap[i]+'\n'
+            resultset.data += maxHeap[i]+'\t'
         #print the min 10 values
+        resultset.data = 'Min Values' + '\n'
         for i in minHeap:
-            print minHeap[i] + '\n'
+            resultset.data += minHeap[i]+'\t'
 
 
 
