@@ -1,5 +1,6 @@
 import threading
-
+import threading2
+from threading2 import *
 __author__ = 'nishantmehta.n'
 from collections import defaultdict
 #complete designing of the data structure goes here,the lock is passed to the ds in the contructor so later on its used via object i.e args

@@ -7,6 +7,10 @@ import json
 import node1
 import datetime
 import time
+
+import threading2
+from threading2 import *
+
 #we need to put all the data collection logic here
 
 #the work which was done yesterday will go here
@@ -44,14 +48,19 @@ class DataCollection():
             apple=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') ,str(da['query']['results']['quote']['LastTradePriceOnly']))
 
             #acquire locks
-            dataStructure.stockHash["Google"].append(google)
-            dataStructure.stockHash["Apple"].append(apple)
-            dataStructure.stockHash["Yahoo"].append(yahoo)
+            dataStructure.lock.acquire(shared = True )
+            try:
+                dataStructure.stockHash["Google"].append(google)
+                dataStructure.stockHash["Apple"].append(apple)
+                dataStructure.stockHash["Yahoo"].append(yahoo)
+            finally:
+                dataStructure.lock.release()
             #revoke lock
 
             #wait until refresh time expires
             time.sleep(3)
-
+            '''
             for company in dataStructure.stockHash:
                 print "company has # of values "+ company +" "+ str(len(dataStructure.stockHash[company]))
 
+            '''

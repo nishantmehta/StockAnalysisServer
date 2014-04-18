@@ -11,8 +11,16 @@ import threading
 import QueryFunctions
 import result
 
-lock=threading.Lock()
-alist=defaultdict(list)
+import threading2
+from threading2 import *
+
+
+# created a lock that can be shared using Shared variable associated with it
+# if lock.share = true  --- multiple locks can shared the lock
+# if lock.share = false --- the lock becomes an exclusive lock
+
+lock  = SHLock()
+alist = defaultdict(list)
 #initialize data structure to store stock quotes
 dataStruct = DataStructure.DataStructure(lock,alist)
 
@@ -49,7 +57,7 @@ def hello_world():
 def index():
     consumer=QueryFunctions.queries()
     resultData=result.res()
-    consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
+    consumerThread = Thread(target = consumer.query2,args=['Google',dataStruct,10,resultData])
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
