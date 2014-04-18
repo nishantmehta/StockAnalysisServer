@@ -1,6 +1,34 @@
 import heapq
+from collections import defaultdict
 __author__ = 'nishantmehta.n'
 
+
+try:
+    from line_profiler import LineProfiler
+
+    def do_profile(follow=[]):
+        def inner(func):
+            def profiled_func(*args, **kwargs):
+                try:
+                    profiler = LineProfiler()
+                    profiler.add_function(func)
+                    for f in follow:
+                        profiler.add_function(f)
+                    profiler.enable_by_count()
+                    return func(*args, **kwargs)
+                finally:
+                    profiler.print_stats()
+            return profiled_func
+        return inner
+
+except ImportError:
+    def do_profile(follow=[]):
+        "Helpful if you accidentally leave in production!"
+        def inner(func):
+            def nothing(*args, **kwargs):
+                return func(*args, **kwargs)
+            return nothing
+        return inner
 
 #all the query functions will be written here
 
@@ -42,6 +70,28 @@ class queries():
         resultset.data = 'Min Values' + '\n'
         for i in minHeap:
             resultset.data += minHeap[i]+'\t'
+
+    @do_profile(follow=[])
+    def query3(self, dataStructure,result):
+        result.data=""
+        for company in dataStructure.stockHash.iterkeys():
+            #print company
+            arrayOfDiff=[]
+            sizeOfStruct=len(dataStructure.stockHash[company])
+            #print sizeOfStruct
+            for i in range (0,sizeOfStruct-1):
+                arrayOfDiff.append(float(dataStructure.stockHash[company][i+1].price)- float(dataStructure.stockHash[company][i].price))
+
+            maxDiff=arrayOfDiff[0]
+            #print arrayOfDiff
+
+            for j in range (1,sizeOfStruct-1):
+                if (arrayOfDiff[j-1]>0):
+                    arrayOfDiff[j]+=arrayOfDiff[j-1]
+                if(maxDiff<arrayOfDiff[j]):
+                    maxDiff=arrayOfDiff[j]
+
+            result.data += "max profit for " + company + " could have been " + str(maxDiff) + "<br>"
 
 
 
