@@ -19,7 +19,7 @@ class DataCollection():
         # possible changes in the looping structure
         # All data needs to be stored in the arg.stockHash[<company code>]
         count = 3
-        for i in range(20):
+        for i in range(10000000):
             if(i%3==0):
                 if count==3:
                     urldata = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='
@@ -28,7 +28,7 @@ class DataCollection():
                     da=json.loads(data)
                     ts=time.time()
                     obj1=node1.node1( datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') ,str(da['query']['results']['quote']['LastTradePriceOnly']))
-                    args.lock.acquire()
+                    args.lock.acquire() 
                     try:
                         args.stockHash['goog'].append(obj1)
                         count=count-1
