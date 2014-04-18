@@ -1,4 +1,5 @@
 import heapq
+import math
 from collections import defaultdict
 __author__ = 'nishantmehta.n'
 
@@ -66,6 +67,27 @@ class queries():
 
             result.data += "max profit for " + company + " could have been " + str(maxDiff) + "<br>"
 
+
+
+    def query4(self,dataStructure,result):
+        result.data=""
+        min=0
+        for company in dataStructure.stockHash.iterkeys():
+            sizeOfStruct=len(dataStructure.stockHash[company])
+            data=[]
+            s=0
+            ss=0
+            for i in range (0,sizeOfStruct-1):
+                s = s + float(dataStructure.stockHash[company][i].price)
+                ss= ss + float(dataStructure.stockHash[company][i].price)**2
+                #data.append(dataStructure.stockHash[company][i].price)
+
+            mean=s/sizeOfStruct
+            svar=ss-((s**2)/sizeOfStruct)
+            var= svar /(sizeOfStruct-1)
+            if(min<var):
+                min=str(var)+"  Company Name: "+ company
+        result.data = "Most stable value" + min
 
 
 

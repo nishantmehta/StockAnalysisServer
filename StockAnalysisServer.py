@@ -63,7 +63,14 @@ def bestProfit():
     consumerThread.join()
     return resultData.data;
 
-
+@app.route('/Stablestock/')
+def stable():
+    consumer=QueryFunctions.queries()
+    resultData=result.res()
+    consumerThread = Thread(target = consumer.query4,args=[dataStruct,resultData])
+    consumerThread.start()
+    consumerThread.join()
+    return resultData.data;
 
 if __name__ == '__main__':
     app.run()
