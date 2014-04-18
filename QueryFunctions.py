@@ -1,4 +1,5 @@
 import heapq
+from collections import defaultdict
 __author__ = 'nishantmehta.n'
 
 
@@ -10,7 +11,7 @@ class queries():
         for i in arg.stockHash['goog']:
             print(i)
 
-    def query2(self,coName,obj,n,):
+    def query2(self,coName,obj,n,resultset):
         # coName : name of the company
         # obj : obj thread passed
         # n   : TOP n stocks variable
@@ -33,14 +34,37 @@ class queries():
                     heapq.heapreplace(maxHeap,stockList[i].price)
                 if minHeap[0] < (-1 * stockList[i]):
                     heapq.heapreplace(minHeap,(-1)*stockList[i].price)
-
+        resultset.data = ''
         #print the max 10 values
+        resultset.data = 'Max Values' + '\n'
         for i in maxHeap:
-            print maxHeap[i]+'\n'
+            resultset.data += maxHeap[i]+'\t'
         #print the min 10 values
-        for i in \
-                minHeap:
-            print minHeap[i] + '\n'
+        resultset.data = 'Min Values' + '\n'
+        for i in minHeap:
+            resultset.data += minHeap[i]+'\t'
+
+    #@do_profile(follow=[])
+    def query3(self, dataStructure,result):
+        result.data=""
+        for company in dataStructure.stockHash.iterkeys():
+            #print company
+            arrayOfDiff=[]
+            sizeOfStruct=len(dataStructure.stockHash[company])
+            #print sizeOfStruct
+            for i in range (0,sizeOfStruct-1):
+                arrayOfDiff.append(float(dataStructure.stockHash[company][i+1].price)- float(dataStructure.stockHash[company][i].price))
+
+            maxDiff=arrayOfDiff[0]
+            #print arrayOfDiff
+
+            for j in range (1,sizeOfStruct-1):
+                if (arrayOfDiff[j-1]>0):
+                    arrayOfDiff[j]+=arrayOfDiff[j-1]
+                if(maxDiff<arrayOfDiff[j]):
+                    maxDiff=arrayOfDiff[j]
+
+            result.data += "max profit for " + company + " could have been " + str(maxDiff) + "<br>"
 
 
 

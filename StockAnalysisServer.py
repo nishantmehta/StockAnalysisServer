@@ -53,10 +53,16 @@ def index():
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
-    consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,))
-    consumerThread2.start()
-    consumerThread2.join()
-    return 1;
+
+@app.route('/BestDealsForStock/')
+def bestProfit():
+    consumer=QueryFunctions.queries()
+    resultData=result.res()
+    consumerThread = Thread(target = consumer.query3,args=[dataStruct,resultData])
+    consumerThread.start()
+    consumerThread.join()
+    return resultData.data;
+
 
 
 if __name__ == '__main__':
