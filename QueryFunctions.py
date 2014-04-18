@@ -1,4 +1,6 @@
 import heapq
+import result
+import node1
 __author__ = 'nishantmehta.n'
 
 
@@ -10,39 +12,51 @@ class queries():
         for i in arg.stockHash['goog']:
             print(i)
 
-    def query2(self,coName,obj,n,resultset):
+    def query2(self,coName,obj,n,result):
         # coName : name of the company
         # obj : obj thread passed
         # n   : TOP n stocks variable
 
-        print "Top n max and min"+'\n'
+
         #a min heap queue to hold max 10 values
         maxHeap = []
-        # a min heap queue to hold min 10 values
+        #a min heap queue to hold min 10 values
         minHeap = []
         # Min Max algorithm
-        stockList = obj.stockHash[coName]
-        j = 0
-        for i in stockList:
-            if j < n:
-              heapq.heappush(maxHeap,stockList[i].price)
-              heapq.heappush(minHeap,(-1)*stockList[i].price)
-              j += 1
-            else:
-                if maxHeap[0] < stockList[i].price:
-                    heapq.heapreplace(maxHeap,stockList[i].price)
-                if minHeap[0] < (-1 * stockList[i]):
-                    heapq.heapreplace(minHeap,(-1)*stockList[i].price)
-        resultset.data = ''
-        #print the max 10 values
-        resultset.data = 'Max Values' + '\n'
-        for i in maxHeap:
-            resultset.data += maxHeap[i]+'\t'
-        #print the min 10 values
-        resultset.data = 'Min Values' + '\n'
-        for i in minHeap:
-            resultset.data += minHeap[i]+'\t'
+        obj.lock.acquire(shared=True)
+        try:
+            stockList = obj.stockHash[coName]
 
+            # test --print "size of array in goog is " + str(len(stockList)) + '\n'
+            j = 0
+            for i in stockList:
+
+                if len(maxHeap) < n :
+                  heapq.heappush(maxHeap,i.price)
+
+                elif len(minHeap)< n:
+                    heapq.heappush(minHeap,(-1)*i.price)
+
+                else:
+                    if maxHeap[0] < i.price:
+                        # print "heap max " + maxHeap[0] + " " + i.price
+                        heapq.heapreplace(maxHeap,i.price)
+                    if minHeap[0] < (-1 * i):
+                        # print "heap min " + minHeap[0] + " " + i.price
+                        heapq.heapreplace(minHeap,(-1)*i.price)
+            # print "Max heap price is " + maxHeap[0]
+            result.data = ''
+            #print the max 10 values
+            result.data = 'Max Values' + '<br>'
+            for j in maxHeap:
+                result.data += str(j) + '<br>'
+                print j + '\n'
+            #print the min 10 values
+            #result.data = 'Min Values' + '\n'
+            # for k in minHeap:
+            #     result.data += k +'\t'
+        finally:
+           obj.lock.release()
 
 
 

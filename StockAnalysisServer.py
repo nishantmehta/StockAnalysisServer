@@ -10,9 +10,12 @@ import threading
 
 import QueryFunctions
 import result
+import threading2
+from threading2 import *
 
-lock=threading.Lock()
-alist=defaultdict(list)
+#changing to Shared Lock
+lock = SHLock()
+alist = defaultdict(list)
 #initialize data structure to store stock quotes
 dataStruct = DataStructure.DataStructure(lock,alist)
 
@@ -43,21 +46,25 @@ app = Flask(__name__)
 @app.route('/')
 def hello_world():
 
-    return 'Hello World!'
+    # return 'Hello World!'
+    return len(dataStruct.stockHash)
 
-@app.route('/query1/')
+
+@app.route('/query2/')
 def index():
     consumer=QueryFunctions.queries()
-    resultData=result.res()
-    consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
-    consumerThread.start()
-    consumerThread.join()
-    return resultData.data;
+    # resultData=result.res()
+    # consumerThread = Thread(target = consumer.query1,args=[dataStruct,resultData])
+    # consumerThread.start()
+    # consumerThread.join()
+    #return resultData.data;
+
     resultData1=result.res()
     consumerThread2 = Thread(target = consumer.query2,args=('goog',dataStruct,10,resultData1,))
     consumerThread2.start()
     consumerThread2.join()
-    print resultData1.data;
+    # print "result of query is " + resultData1.data;
+    return "result of query is " + resultData1.data;
 
 
 if __name__ == '__main__':
