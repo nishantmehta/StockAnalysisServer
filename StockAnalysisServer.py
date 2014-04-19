@@ -14,6 +14,11 @@ import result
 import threading2
 from threading2 import *
 
+from time import time
+
+import queryCacheNode
+
+import math
 
 # created a lock that can be shared using Shared variable associated with it
 # if lock.share = true  --- multiple locks can shared the lock
@@ -27,6 +32,15 @@ dataStruct = DataStructure.DataStructure(lock,alist)
 #initialize the data structure
 dataStruct.structInit(dataStruct)
 
+#Set the upper limit on number of same types of queries supported by browser
+maxQuerySupported = 1000
+
+#initialize the queryCache for the three queries supported
+query1Cache = queryCacheNode.queryCacheNode()
+# for query 2
+query2Cache = queryCacheNode.queryCacheNode()
+# for query 3
+query3Cache = queryCacheNode.queryCacheNode()
 
 #initializa the thread to collect data from yahoo api
 dataCollectionObj =DataCollection.DataCollection()
@@ -57,16 +71,17 @@ def hello_world():
 def index():
     consumer=QueryFunctions.queries()
     resultData=result.res()
-    consumerThread = Thread(target = consumer.query2,args=['Google',dataStruct,10,resultData])
+    consumerThread = Thread(target = consumer.query2,args=['Google',dataStruct,10,resultData,query1Cache])
     consumerThread.start()
     consumerThread.join()
+
     return resultData.data;
 
 @app.route('/BestDealsForStock/')
 def bestProfit():
     consumer=QueryFunctions.queries()
     resultData=result.res()
-    consumerThread = Thread(target = consumer.query3,args=[dataStruct,resultData])
+    consumerThread = Thread(target = consumer.query3,args=[dataStruct,resultData,query2Cache])
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
@@ -75,7 +90,7 @@ def bestProfit():
 def stable():
     consumer=QueryFunctions.queries()
     resultData=result.res()
-    consumerThread = Thread(target = consumer.query4,args=[dataStruct,resultData])
+    consumerThread = Thread(target = consumer.query4,args=[dataStruct,resultData,query3Cache])
     consumerThread.start()
     consumerThread.join()
     return resultData.data;
